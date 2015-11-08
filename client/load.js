@@ -17,12 +17,16 @@ var loadContent = {
       success: function(data){
         console.log('SUCCESS LOAD GENRE', JSON.parse(data));
         newData = JSON.parse(data);
+        $('#selectGenre').html('');
         loadGenreData = '';
         var genreTemplate = _.template(templates.genreTmpl);
         _.each(newData, function(el, idx, array){
-          $('#selectGenre').append('<option>' + el.genreName + '</option>')
+          $('#selectGenre').append('<option data-index= ' + el.id + '>' + el.genreName + '</option>')
+          console.log(el.image)
+          if(el.image === ''){
+            el.image = 'record_with_needle_darkGreen.png'
+          }
           loadGenreData += genreTemplate(el);
-          console.log(el)
             ///THIS IS WHERE THE GENRE TEMPLATE GOES //
         });
         $('.genrePage').html('');
@@ -42,20 +46,27 @@ var loadContent = {
       success: function(data){
         console.log('SUCCESS LOAD ARTIST', JSON.parse(data));
         newData = JSON.parse(data);
+        $('#selectArtist').html('');
         _.each(newData, function(el){
-          $('#selectArtist').append('<option>' + el.artistName + '</option>');
+
+          $('#selectArtist').append('<option data-index=' + el.id +'>' + el.artistName + '</option>');
         });
         var artistTemplate = _.template(templates.artistTmpl);
         loadArtistData = '';
         var artistsWithGenre = _.filter(newData, function(el){
           return el.genreId === genreID
         });
+
         _.each(artistsWithGenre, function(el, idx, arr){
           $('#selectArtist').append('<option>' + el.image + '</option>');
+          if(el.image === ''){
+            el.image = 'record_with_needle_darkGreen.png'
+          }
           loadArtistData += artistTemplate(el);
           console.log(el)
             ///THIS IS WHERE THE ARTIST TEMPLATE GOES //
         });
+
         $('.artistPage').html('');
         $('.artistPage').append('<h1>ARTISTS</h1>' + loadArtistData);
           ///ORANGE === ARTIST PAGE //
@@ -79,6 +90,9 @@ var loadContent = {
           return el.artistId === artistID
         });
         _.each(albumWithArtist, function(el, idx, arr){
+          if(el.image === ''){
+            el.image = 'record_with_needle_darkGreen.png'
+          }
           loadAlbumData += albumTemplate(el);
           console.log(el)
           ///THIS IS WHERE THE ALBUM TEMPLATE GOES //
